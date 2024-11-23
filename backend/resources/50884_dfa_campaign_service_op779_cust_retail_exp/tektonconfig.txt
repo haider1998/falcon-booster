@@ -1,0 +1,2 @@
+APPLICATION=CAMPAIGN_SERVICE
+FEED=op779_cust_retail_exp

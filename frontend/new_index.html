@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Runflow Input - Falcon Boost</title>
+    <!-- Bootstrap CSS CDN (updated to v5.3.0) -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Custom CSS -->
+    <style>
+        :root {
+            --ford-blue: #003399;
+        }
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f8f9fa;
+        }
+        .container {
+            max-width: 600px;
+            padding-bottom: 75px;
+        }
+        .loading {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(255, 255, 255, 0.8);
+            z-index: 1000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .navbar-brand img {
+            height: 40px;
+        }
+        .navbar-center {
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+        .falcon-text {
+            font-weight: bold;
+            color: var(--ford-blue);
+            font-size: 20px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+            letter-spacing: 1px;
+        }
+        .heading-space {
+            margin-bottom: 30px;
+        }
+        .form-label {
+            font-weight: bold;
+        }
+        .btn-primary {
+            background-color: var(--ford-blue);
+            border-color: var(--ford-blue);
+        }
+        .btn-primary:hover {
+            background-color: #002266;
+            border-color: #002266;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="#">
+                <img src="images/my-logo.png" alt="My Logo">
+            </a>
+            <div class="navbar-center">
+                <span class="falcon-text">Falcon Boost</span>
+                <img src="images/falcon-blue-logo.png" alt="Falcon Logo" style="height: 40px;">
+            </div>
+        </div>
+    </nav>
+
+    <main class="container mt-5">
+        <h1 class="text-center heading-space">1: Getting Started</h1>
+        <form id="inputForm" novalidate>
+            <div class="mb-3">
+                <label for="github_url" class="form-label">GitHub URL:</label>
+                <input type="url" class="form-control" id="github_url" name="github_url" required
+                       placeholder="e.g., https://github.com/test/">
+                <div class="invalid-feedback">
+                    Please enter a valid GitHub URL.
+                </div>
+            </div>
+            <div class="mb-3">
+                <label for="app_name" class="form-label">App Name:</label>
+                <input type="text" class="form-control" id="app_name" name="app_name" required
+                       placeholder="e.g., GCP_CAMPAIGN_SERVICE">
+                <div class="invalid-feedback">
+                    Please enter an app name.
+                </div>
+            </div>
+            <div class="mb-3">
+                <label for="feed_name" class="form-label">Feed Name:</label>
+                <input type="text" class="form-control" id="feed_name" name="feed_name" required
+                       placeholder="e.g., op6212_esp_marketing">
+                <div class="invalid-feedback">
+                    Please enter a feed name.
+                </div>
+            </div>
+            <div class="mb-3">
+                <label for="initials_6char" class="form-label">Unique Feed Initials (6 characters):</label>
+                <input type="text" class="form-control" id="initials_6char" name="initials_6char" required
+                       minlength="6" maxlength="6" placeholder="e.g., espmkt">
+                <div class="invalid-feedback">
+                    Please enter exactly 6 characters.
+                </div>
+            </div>
+            <div class="mb-3 form-check">
+                <input type="checkbox" class="form-check-input" id="ccpa" name="ccpa">
+                <label class="form-check-label" for="ccpa">Enable CCPA</label>
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Drop Zone:</label>
+                <div class="row">
+                    <div class="col">
+                        <div class="form-check form-switch">
+                            <input class="form-check-input" type="checkbox" id="dropzone_gcs_bucket" name="dropzone_gcs_bucket" checked>
+                            <label class="form-check-label" for="dropzone_gcs_bucket">GCS Bucket</label>
+                        </div>
+                    </div>
+                    <div class="col">
+                        <div class="form-check form-switch">
+                            <input class="form-check-input" type="checkbox" id="dropzone_sftp" name="dropzone_sftp" checked>
+                            <label class="form-check-label" for="dropzone_sftp">SFTP/GecHub</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Action:</label>
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="action" id="generate_design" value="design" required>
+                    <label class="form-check-label" for="generate_design">Generate Design</label>
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="action" id="generate_details" value="details" required>
+                    <label class="form-check-label" for="generate_details">Generate Details</label>
+                </div>
+                <div class="invalid-feedback">
+                    Please select an action.
+                </div>
+            </div>
+            <button class="btn btn-primary w-100" id="submitButton" type="submit">Submit</button>
+        </form>
+    </main>
+
+    <div class="loading" id="loadingSpinner">
+        <div class="spinner-border text-primary" role="status">
+            <span class="visually-hidden">Loading...</span>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS Bundle (includes Popper) -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Custom JS for validation and loading spinner -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const form = document.getElementById('inputForm');
+            const submitButton = document.getElementById('submitButton');
+            const loadingSpinner = document.getElementById('loadingSpinner');
+
+            loadingSpinner.style.display = 'none';
+
+            form.addEventListener('submit', function(event) {
+                event.preventDefault(); // Prevent the default form submission
+
+                if (!form.checkValidity()) {
+                    event.stopPropagation();
+                    form.classList.add('was-validated');
+                } else {
+                    loadingSpinner.style.display = 'flex';
+                    submitButton.disabled = true;
+
+                    // Prepare form data for submission
+                    const formData = new FormData(form);
+
+                    // Send data to the backend using Fetch API
+                    fetch('/', { // Replace '/' with your backend endpoint
+                        method: 'POST',
+                        body: formData
+                    })
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error('Network response was not ok');
+                        }
+                        return response.json();
+                    })
+                    .then(data => {
+                        console.log('Success:', data);
+                        // Redirect to result page with the result data
+                        const queryParams = new URLSearchParams(data).toString();
+                        window.location.href = `result.html?${queryParams}`;
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        // Handle error (e.g., display an error message)
+                        loadingSpinner.style.display = 'none';
+                        submitButton.disabled = false;
+                    });
+                }
+            });
+
+            // Custom validation for initials
+            const initialsField = document.getElementById('initials_6char');
+            initialsField.addEventListener('input', function() {
+                if (this.value.length !== 6) {
+                    this.setCustomValidity('Please enter exactly 6 characters.');
+                } else {
+                    this.setCustomValidity('');
+                }
+            });
+        });
+    </script>
+</body>
+</html>

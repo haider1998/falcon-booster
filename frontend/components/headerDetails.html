@@ -1,0 +1,33 @@
+<!-- frontend/components/header.html -->
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <a class="navbar-brand" href="#">
+        <img alt="Ford Logo" src="images/ford-removebg-preview.png">
+    </a>
+    <div class="navbar-center">
+        <span class="falcon-text">Falcon Boost</span>
+        <img alt="Falcon Logo" src="images/falcon-blue-logo.png" style="height: 40px;">
+    </div>
+</nav>
+
+<!-- Custom CSS for header -->
+<style>
+    .navbar-brand img {
+        height: 40px; /* Adjust the height as needed */
+    }
+    .navbar-center {
+        position: absolute;
+        left: 50%;
+        transform: translateX(-50%);
+        font-family: 'Arial', sans-serif;
+        font-weight: bold;
+        color: #003399; /* Ford blue color */
+    }
+    .falcon-text {
+        font-family: 'Arial', sans-serif;
+        font-weight: bold;
+        color: #003399; /* Ford blue color */
+        font-size: 20px; /* Adjust the size as needed */
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2); /* Add a subtle shadow */
+        letter-spacing: 1px; /* Add some spacing between letters */
+    }
+</style>

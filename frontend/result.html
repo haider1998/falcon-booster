@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Runflow Result</title>
+    <!-- Bootstrap CSS CDN -->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Custom CSS -->
+    <style>
+        .container {
+            margin-top: 50px;
+            padding-bottom: 75px;
+        }
+        .step-card {
+            margin-bottom: 20px;
+        }
+        .card-header {
+            background-color: #007bff;
+            color: white;
+        }
+        .card {
+            border: 1px solid #007bff;
+        }
+        .source-table-list {
+            margin-bottom: 0;
+        }
+    </style>
+</head>
+<body>
+<!-- Include the header -->
+{% include 'components/headerDetails.html' %}
+<div class="container">
+    <h1 class="text-center">Runflow Steps for {{ app_name }}#{{ feed_name }}</h1>
+    {% if steps %}
+    <div class="row">
+        {% for step in steps %}
+        <div class="col-md-12">
+            <div class="card step-card">
+                <div class="card-header">
+                    <h5 class="mb-0">Step {{ step['step_number'] }}: {{ step['table_name'] }}</h5>
+                </div>
+                <div class="card-body">
+                    <p><strong>GCS Bucket Name:</strong> {{ step['gcs_bucket_name'] }}</p>
+                    <p><strong>Table Name:</strong> {{ step['table_name'] }}</p>
+                    <p><strong>Source Tables:</strong></p>
+                    {% if step['source_tables'] %}
+                    <ul class="list-group source-table-list">
+                        {% for source_table in step['source_tables'] %}
+                        <li class="list-group-item">{{ source_table }}</li>
+                        {% endfor %}
+                    </ul>
+                    {% else %}
+                    <p>No source tables available.</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <p class="text-center">No steps available to display.</p>
+    {% endif %}
+    <div class="text-center mt-4">
+        <a class="btn btn-secondary" href="/">Back to Form</a>
+        <a class="btn btn-primary"
+           href="/create-feed-repository?app_name={{ app_name }}&feed_name={{ feed_name }}&initials_6char={{ initials_6char }}&ccpa={{ ccpa }}">Create Feed Repository</a>
+    </div>
+</div>
+<!-- Bootstrap JS and dependencies -->
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<!-- Optional Popper.js -->
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
+<!-- Bootstrap JS CDN -->
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>

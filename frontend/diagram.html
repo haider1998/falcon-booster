@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Diagram</title>
+    <!-- Bootstrap CSS CDN -->
+    <style>
+        .container {
+            margin-top: 50px;
+            padding-bottom: 75px;
+        }
+        .step-card {
+            margin-bottom: 20px;
+        }
+        .card-header {
+            background-color: #007bff;
+            color: white;
+        }
+        .card {
+            border: 1px solid #007bff;
+        }
+        .source-table-list {
+            margin-bottom: 0;
+        }
+        /* Additional styles for better spacing and layout */
+        .button-group {
+            margin-top: 30px;
+            margin-bottom: 30px;
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            background-color: #f0f0f0; /* Light grey background */
+            padding: 15px;
+            border-radius: 8px;
+        }
+        .btn {
+            padding: 10px 20px;
+            font-size: 16px;
+        }
+        .mermaid {
+            margin-bottom: 40px; /* Space between diagram and button section */
+        }
+    </style>
+    <!-- Mermaid CSS -->
+    <script type="module">
+        import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs';
+        mermaid.initialize({ startOnLoad: true });
+
+        document.addEventListener('DOMContentLoaded', function () {
+            mermaid.run().then(() => {
+                const downloadBtn = document.getElementById('download-btn');
+                downloadBtn.addEventListener('click', function () {
+                    const svg = document.querySelector('.mermaid svg');
+                    if (svg) {
+                        const serializer = new XMLSerializer();
+                        let source = serializer.serializeToString(svg);
+
+                        if (!source.match(/^<svg[^>]+xmlns="http:\/\/www\.w3\.org\/2000\/svg"/)) {
+                            source = source.replace(/^<svg/, '<svg xmlns="http://www.w3.org/2000/svg"');
+                        }
+                        if (!source.match(/^<svg[^>]+"http:\/\/www\.w3\.org\/1999\/xlink"/)) {
+                            source = source.replace(/^<svg/, '<svg xmlns:xlink="http://www.w3.org/1999/xlink"');
+                        }
+
+                        source = '<?xml version="1.0" standalone="no"?>\r\n' + source;
+
+                        const blob = new Blob([source], { type: 'image/svg+xml;charset=utf-8' });
+                        const url = URL.createObjectURL(blob);
+
+                        const a = document.createElement('a');
+                        a.href = url;
+                        a.download = '{{ design_name }}.svg';
+                        document.body.appendChild(a);
+                        a.click();
+                        document.body.removeChild(a);
+
+                        setTimeout(() => URL.revokeObjectURL(url), 0);
+                    } else {
+                        alert('No SVG diagram found!');
+                    }
+                });
+            });
+        });
+    </script>
+</head>
+<body>
+<!-- Include the header -->
+{% include 'components/header.html' %}
+
+<div class="container">
+    <div class="mermaid">
+        {{ mermaid_code | safe }}
+    </div>
+    <div class="button-group">
+        <a class="btn btn-secondary" href="/">Back to Form</a>
+        <button id="download-btn" class="btn btn-primary">Download SVG</button>
+    </div>
+</div>
+
+</body>
+</html>

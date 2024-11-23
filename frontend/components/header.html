@@ -1,0 +1,49 @@
+<!-- frontend/components/header.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Header</title>
+    <!-- Bootstrap CSS CDN -->
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Optional: Include jQuery and Popper.js before Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
+    <!-- Bootstrap JS CDN -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+    <!-- Custom CSS -->
+    <style>
+        .navbar-brand img {
+            height: 40px; /* Adjust the height as needed */
+        }
+        .navbar-center {
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            font-family: 'Arial', sans-serif;
+            font-weight: bold;
+            color: #003399; /* Ford blue color */
+        }
+        .falcon-text {
+            font-family: 'Arial', sans-serif;
+            font-weight: bold;
+            color: #003399; /* Ford blue color */
+            font-size: 20px; /* Adjust the size as needed */
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2); /* Add a subtle shadow */
+            letter-spacing: 1px; /* Add some spacing between letters */
+        }
+    </style>
+</head>
+<body>
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <a class="navbar-brand" href="#">
+        <img alt="Ford Logo" src="images/ford-removebg-preview.png">
+    </a>
+    <div class="navbar-center">
+        <span class="falcon-text">Falcon Boost</span>
+        <img alt="Falcon Logo" src="images/falcon-blue-logo.png" style="height: 40px;">
+    </div>
+</nav>
+</body>
+</html>

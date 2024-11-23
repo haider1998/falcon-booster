@@ -1,0 +1,2 @@
+#Include the archival bucket name and any additional instructions for the Release Manager if needed
+dfa-coldline-archive-{ENV}

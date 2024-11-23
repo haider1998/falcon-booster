@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Runflow Input</title>
+    <!-- Bootstrap CSS CDN -->
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Optional: Include jQuery and Popper.js before Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
+    <!-- Bootstrap JS CDN -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+    <!-- Custom CSS -->
+    <style>
+        .container {
+            margin-top: 50px;
+            max-width: 600px;
+            padding-bottom: 75px;
+        }
+        .loading {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.8);
+            z-index: 1000;
+            text-align: center;
+            padding-top: 200px;
+        }
+        .navbar-brand img {
+            height: 40px; /* Adjust the height as needed */
+        }
+        .navbar-center {
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            font-family: 'Arial', sans-serif;
+            font-weight: bold;
+            color: #003399; /* Ford blue color */
+        }
+        .falcon-text {
+            font-family: 'Arial', sans-serif;
+            font-weight: bold;
+            color: #003399; /* Ford blue color */
+            font-size: 20px; /* Adjust the size as needed */
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2); /* Add a subtle shadow */
+            letter-spacing: 1px; /* Add some spacing between letters */
+        }
+        .heading-space {
+            margin-bottom: 30px; /* Add space below the heading */
+        }
+    </style>
+</head>
+<body>
+<!-- Header Navbar -->
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <a class="navbar-brand" href="#">
+        <img alt="Ford Logo" src="images/ford-removebg-preview.png">
+    </a>
+    <div class="navbar-center">
+        <span class="falcon-text">Falcon Boost</span>
+        <img alt="Falcon Logo" src="images/falcon-blue-logo.png" style="height: 40px;">
+    </div>
+
+</nav>
+
+<div class="container">
+    <h1 class="text-center heading-space">1: Getting Started</h1>
+    <form action="/" id="inputForm" method="post" novalidate>
+        <div class="form-group">
+            <label for="github_url">GitHub URL:</label>
+            <input class="form-control" id="github_url" name="github_url" placeholder="e.g., https://github.com/test/"
+                   required type="url">
+            <div class="invalid-feedback">
+                Please enter a valid GitHub URL.
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="app_name">App Name:</label>
+            <input class="form-control" id="app_name" name="app_name" placeholder="e.g., GCP_CAMPAIGN_SERVICE" required
+                   type="text">
+            <div class="invalid-feedback">
+                Please enter an app name.
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="feed_name">Feed Name:</label>
+            <input class="form-control" id="feed_name" name="feed_name" placeholder="e.g., op6212_esp_marketing" required
+                   type="text">
+            <div class="invalid-feedback">
+                Please enter a feed name.
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="initials_6char">Unique Feed Initials (6 characters):</label>
+            <input class="form-control" id="initials_6char" maxlength="6" minlength="6" name="initials_6char"
+                   placeholder="e.g., espmkt" required type="text">
+            <div class="invalid-feedback">
+                Please enter exactly 6 characters.
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="ccpa">CCPA:</label>
+            <div class="custom-control custom-switch">
+                <input class="custom-control-input" id="ccpa" name="ccpa" type="checkbox">
+                <label class="custom-control-label" for="ccpa">Enable CCPA</label>
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="dropzone_sftp">Drop Zone:</label>
+            <div class="row">
+                <div class="col">
+                    <div class="custom-control custom-switch">
+                        <input checked class="custom-control-input" id="dropzone_gcs_bucket"
+                               name="dropzone_gcs_bucket" type="checkbox">
+                        <label class="custom-control-label" for="dropzone_gcs_bucket">GCS Bucket</label>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="custom-control custom-switch">
+                        <input checked class="custom-control-input" id="dropzone_sftp" name="dropzone_sftp"
+                               type="checkbox">
+                        <label class="custom-control-label" for="dropzone_sftp">SFTP/GecHub</label>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+            <label>Action:</label><br>
+            <div class="form-check form-check-inline">
+                <input class="form-check-input" id="generate_design" name="action" required type="radio" value="design">
+                <label class="form-check-label" for="generate_design">Generate Design</label>
+            </div>
+            <div class="form-check form-check-inline">
+                <input class="form-check-input" id="generate_details" name="action" required type="radio"
+                       value="details">
+                <label class="form-check-label" for="generate_details">Generate Details</label>
+            </div>
+            <div class="invalid-feedback">
+                Please select an action.
+            </div>
+        </div>
+        <button class="btn btn-primary btn-block" id="submitButton" type="submit">Submit</button>
+    </form>
+</div>
+
+<div class="loading" id="loadingSpinner">
+    <div class="spinner-border text-primary" role="status">
+        <span class="sr-only">Loading...</span>
+    </div>
+</div>
+
+<!-- Custom JS for validation and loading spinner -->
+<script>
+    (function() {
+        'use strict';
+        window.addEventListener('load', function() {
+            var form = document.getElementById('inputForm');
+            var submitButton = document.getElementById('submitButton');
+            var loadingSpinner = document.getElementById('loadingSpinner');
+
+            form.addEventListener('submit', function(event) {
+                if (form.checkValidity() === false || !validateInitials()) {
+                    event.preventDefault();
+                    event.stopPropagation();
+                    form.classList.add('was-validated');
+                } else {
+                    form.classList.add('was-validated');
+                    loadingSpinner.style.display = 'block';
+                    submitButton.disabled = true;
+                    setTimeout(function() {
+                        submitButton.disabled = false;
+                    }, 15000);
+                }
+            }, false);
+        }, false);
+
+        function validateInitials() {
+            var initialsField = document.getElementById('initials_6char');
+            if (initialsField.value.length !== 6) {
+                initialsField.setCustomValidity('Please enter exactly 6 characters.');
+                return false;
+            } else {
+                initialsField.setCustomValidity('');
+                return true;
+            }
+        }
+    })();
+</script>
+</body>
+</html>

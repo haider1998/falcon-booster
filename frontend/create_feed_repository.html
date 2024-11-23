@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Create Feed Repository</title>
+    <!-- Bootstrap CSS CDN -->
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Optional: Include jQuery and Popper.js before Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
+    <!-- Bootstrap JS CDN -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+    <!-- Custom CSS -->
+    <style>
+        .container {
+            margin-top: 50px;
+            max-width: 600px;
+            padding-bottom: 75px;
+        }
+        .loading {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.8);
+            z-index: 1000;
+            text-align: center;
+            padding-top: 200px;
+        }
+        .navbar-brand img {
+            height: 40px; /* Adjust the height as needed */
+        }
+        .navbar-center {
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            font-family: 'Arial', sans-serif;
+            font-weight: bold;
+            color: #003399; /* Ford blue color */
+        }
+        .falcon-text {
+            font-family: 'Arial', sans-serif;
+            font-weight: bold;
+            color: #003399; /* Ford blue color */
+            font-size: 20px; /* Adjust the size as needed */
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2); /* Add a subtle shadow */
+            letter-spacing: 1px; /* Add some spacing between letters */
+        }
+        .heading-space {
+            margin-bottom: 30px; /* Add space below the heading */
+        }
+    </style>
+</head>
+<body>
+<!-- Header Navbar -->
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <a class="navbar-brand" href="#">
+        <img alt="Ford Logo" src="images/ford-removebg-preview.png">
+    </a>
+    <div class="navbar-center">
+        <span class="falcon-text">Falcon Boost</span>
+        <img alt="Falcon Logo" src="images/falcon-blue-logo.png" style="height: 40px;">
+    </div>
+</nav>
+
+<div class="container">
+    <h1 class="text-center heading-space">2: Generate DFA Feed Repository</h1>
+    <form action="/create-feed-repository" id="createFeedForm" method="post" novalidate>
+        <!-- Hidden inputs for existing data -->
+        <input id="app_name" name="app_name" type="hidden">
+        <input id="feed_name" name="feed_name" type="hidden">
+        <input id="initials_6char" name="initials_6char" type="hidden">
+        <input id="ccpa" name="ccpa" type="hidden">
+        <!-- Additional inputs -->
+        <div class="form-group">
+            <label for="data_engineer_name">Data Engineer Name:</label>
+            <input class="form-control" id="data_engineer_name" name="data_engineer_name" placeholder="e.g., John Doe"
+                   required type="text">
+            <div class="invalid-feedback">
+                Please enter the Data Engineer's name.
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="data_engineer_cds_id">Data Engineer CDS Id:</label>
+            <input class="form-control" id="data_engineer_cds_id" name="data_engineer_cds_id" placeholder="e.g., DE12345"
+                   required type="text">
+            <div class="invalid-feedback">
+                Please enter the Data Engineer's CDS Id.
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="software_engineer_cds_id">Software Engineer CDS Id:</label>
+            <input class="form-control" id="software_engineer_cds_id" name="software_engineer_cds_id" placeholder="e.g., SE12345"
+                   required type="text">
+            <div class="invalid-feedback">
+                Please enter the Software Engineer's CDS Id.
+            </div>
+        </div>
+        <div class="form-group">
+            <label>Storage Type:</label>
+            <div class="form-check">
+                <input class="form-check-input" id="archive" name="storage_type" required type="radio" value="Archive">
+                <label class="form-check-label" for="archive">
+                    Archive
+                </label>
+            </div>
+            <div class="form-check">
+                <input class="form-check-input" id="coldline" name="storage_type" required type="radio"
+                       value="Coldline">
+                <label class="form-check-label" for="coldline">
+                    Coldline
+                </label>
+            </div>
+            <div class="invalid-feedback">
+                Please select a storage type.
+            </div>
+        </div>
+        <button class="btn btn-primary btn-block" type="submit">Submit</button>
+    </form>
+</div>
+
+<div class="loading" id="loadingSpinner">
+    <div class="spinner-border text-primary" role="status">
+        <span class="sr-only">Loading...</span>
+    </div>
+</div>
+
+<!-- Custom JS for validation and populating hidden fields -->
+<script>
+    (function() {
+        'use strict';
+        window.addEventListener('load', function() {
+            // Populate hidden fields with query parameters
+            const urlParams = new URLSearchParams(window.location.search);
+            document.getElementById('app_name').value = urlParams.get('app_name');
+            document.getElementById('feed_name').value = urlParams.get('feed_name');
+            document.getElementById('initials_6char').value = urlParams.get('initials_6char');
+            document.getElementById('ccpa').value = urlParams.get('ccpa');
+
+            var form = document.getElementById('createFeedForm');
+            var submitButton = document.getElementById('submitButton');
+            var loadingSpinner = document.getElementById('loadingSpinner');
+
+            form.addEventListener('submit', function(event) {
+                if (form.checkValidity() === false) {
+                    event.preventDefault();
+                    event.stopPropagation();
+                } else {
+                    loadingSpinner.style.display = 'block';
+                    submitButton.disabled = true;
+                    setTimeout(function() {
+                        submitButton.disabled = false;
+                    }, 15000);
+                }
+                form.classList.add('was-validated');
+            }, false);
+        }, false);
+    })();
+</script>
+</body>
+</html>
