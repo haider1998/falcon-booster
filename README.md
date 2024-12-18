@@ -1,6 +1,6 @@
 # Falcon Booster
 
-![Falcon Booster Logo](https://github.com/haider1998/falcon-booster/frontend/images/falcon-logo-removebg-preview.png)
+![Falcon Booster Logo](https://github.com/haider1998/falcon-booster/blob/master/frontend/images/falcon-logo-removebg-preview.png)
 
 [![License](https://img.shields.io/github/license/haider1998/falcon-booster)](LICENSE)
 [![Build Status](https://github.com/haider1998/falcon-booster/actions/workflows/ci.yml/badge.svg)](https://github.com/haider1998/falcon-booster/actions)
